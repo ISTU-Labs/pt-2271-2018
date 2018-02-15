@@ -123,7 +123,7 @@ double * calculate(double k,
 #ifdef TEST
 
 int main(int argc, char ** argv) {
-  int d_len;
+  rlen_t d_len;
   double * result;
 
   printf("The program for solving Cauchy problems.\n");
@@ -137,7 +137,7 @@ int main(int argc, char ** argv) {
                      10,
                      &d_len);
 
-  for (int i=0; i<d_len; i++) {
+  for (int i=0; i<d_len.len; i++) {
     printf("%f\n", result[i]);
   }
   release(result);

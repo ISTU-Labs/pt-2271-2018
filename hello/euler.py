@@ -115,6 +115,10 @@ release_rlen = _euler.release_rlen
 def calculate(k: 'double', Tenv: 'double', t0: 'double', T0: 'double', h: 'double', eps: 'double', m: 'int', lenp: 'rlen_t *') -> "double *":
     return _euler.calculate(k, Tenv, t0, T0, h, eps, m, lenp)
 calculate = _euler.calculate
+
+def get_i(arr: 'double *', i: 'int') -> "double":
+    return _euler.get_i(arr, i)
+get_i = _euler.get_i
 # This file is compatible with both classic and new-style classes.
 
 
