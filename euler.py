@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 def cooling_diffeq(k, Tenv):
     def f(t, T):
         return -k*(T-Tenv)
-        
+
     return f
 
 def solve(f, F0, eps, h, n):
@@ -15,23 +15,23 @@ def solve(f, F0, eps, h, n):
     l=[]
     c=0
     while True:
-        
+
         if c % n == 0:
             l.append(F)
-            
+
         dFdt=f(x, F)
-        
+
         deltaF=dFdt*h
-        
+
         if abs(deltaF) < eps:
             break
-        
+
         x=x+h
-        F=F+deltaF  
+        F=F+deltaF
         c+=1
-    
+
     return l
-    
+
 
 def draw(sol):
     plt.plot(sol)

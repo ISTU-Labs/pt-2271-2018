@@ -112,8 +112,6 @@ class Ui_Dialog(object):
         self.label_4.setBuddy(self.Tenv)
 
         self.retranslateUi(Dialog)
-        self.buttonBox.accepted.connect(Dialog.accept)
-        self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         Dialog.setTabOrder(self.T0, self.Tenv)
         Dialog.setTabOrder(self.Tenv, self.k)
