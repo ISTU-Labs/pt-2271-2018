@@ -1,26 +1,30 @@
 import euler
 
+
 class Euler(object):
     def __init__(self,
-                 k,Tenv,
-                 t0,T0,
-                 h,eps,
+                 k, Tenv,
+                 t0, T0,
+                 h, eps,
                  m
-    ):
-        self.k=k
-        self.Tenv=Tenv
-        self.t0=t0
-        self.T0=T0
-        self.h=h
-        self.eps=eps
-        self.m=m
-        self._rlen=euler.new_rlen()
-        self._result=None
+                 ):
+        self.k = k
+        self.Tenv = Tenv
+        self.t0 = t0
+        self.T0 = T0
+        self.h = h
+        self.eps = eps
+        self.m = m
+        self._rlen = euler.new_rlen()
+        self._result = None
+
+    # def __str__(self):  # self printOn: Transcript
+    #    return ""
 
     def release_result(self):
         if self._result is not None:
             euler.release(self._result)
-        self._result=None
+        self._result = None
 
     def __del__(self):
         self.release_result()
@@ -40,4 +44,3 @@ class Euler(object):
     def __getitem__(self, index):
         assert self._result is not None, "run calculate method to get result"
         return euler.get_i(self._result, index)
-
