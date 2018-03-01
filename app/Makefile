@@ -2,7 +2,7 @@
 
 run: euler
 	./euler
-	
+
 qt: kettle_form.py
 	python interface.py
 
@@ -13,9 +13,8 @@ python: euler.c euler_wrap.c
 	gcc euler.c euler_wrap.c -o _euler.so -fPIC --shared -I/usr/include/python3.6m -lpython3.6m
 
 
-hello_wrap.c: euler.i
+euler_wrap.c: euler.i
 	swig -python -py3 $<
 
 kettle_form.py: ui/KettleForm.ui
 	pyuic5 -x -o $@ $<
-	

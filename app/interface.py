@@ -11,8 +11,8 @@ class KettleForm(QtWidgets.QDialog):
     def accept(self, model):
         self.model=model
         self.update()
-    def updata(self);:
-        salf.
+    def updata(self):
+        pass
 
 
 def main():
