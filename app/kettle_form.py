@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/KettleForm.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.10.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -11,10 +11,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(510, 516)
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(Dialog)
+        Dialog.resize(494, 519)
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout(Dialog)
+        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.tabs = QtWidgets.QTabWidget(Dialog)
+        self.tabs.setObjectName("tabs")
+        self.tab = QtWidgets.QWidget()
+        self.tab.setObjectName("tab")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.tab)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.groupBox_2 = QtWidgets.QGroupBox(Dialog)
+        self.groupBox_2 = QtWidgets.QGroupBox(self.tab)
         self.groupBox_2.setObjectName("groupBox_2")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.groupBox_2)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -49,7 +55,7 @@ class Ui_Dialog(object):
         self.label_7.setObjectName("label_7")
         self.verticalLayout.addWidget(self.label_7)
         self.verticalLayout_3.addWidget(self.groupBox_2)
-        self.groupBox_4 = QtWidgets.QGroupBox(Dialog)
+        self.groupBox_4 = QtWidgets.QGroupBox(self.tab)
         self.groupBox_4.setObjectName("groupBox_4")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.groupBox_4)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
@@ -104,11 +110,32 @@ class Ui_Dialog(object):
         self.formLayout_2.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.Tenv)
         self.verticalLayout_4.addWidget(self.groupBox)
         self.verticalLayout_3.addWidget(self.groupBox_4)
-        self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.run = QtWidgets.QPushButton(self.tab)
+        self.run.setObjectName("run")
+        self.horizontalLayout.addWidget(self.run)
+        self.buttonBox = QtWidgets.QDialogButtonBox(self.tab)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
-        self.verticalLayout_3.addWidget(self.buttonBox)
+        self.horizontalLayout.addWidget(self.buttonBox)
+        self.horizontalLayout_2.addLayout(self.horizontalLayout)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_2)
+        self.tabs.addTab(self.tab, "")
+        self.tab_2 = QtWidgets.QWidget()
+        self.tab_2.setObjectName("tab_2")
+        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.tab_2)
+        self.verticalLayout_6.setObjectName("verticalLayout_6")
+        self.result = QtWidgets.QGraphicsView(self.tab_2)
+        self.result.setObjectName("result")
+        self.verticalLayout_6.addWidget(self.result)
+        self.tabs.addTab(self.tab_2, "")
+        self.verticalLayout_5.addWidget(self.tabs)
         self.label_5.setBuddy(self.h)
         self.label_6.setBuddy(self.eps)
         self.label_2.setBuddy(self.t0)
@@ -117,6 +144,7 @@ class Ui_Dialog(object):
         self.label_4.setBuddy(self.Tenv)
 
         self.retranslateUi(Dialog)
+        self.tabs.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         Dialog.setTabOrder(self.T0, self.Tenv)
         Dialog.setTabOrder(self.Tenv, self.k)
@@ -138,6 +166,9 @@ class Ui_Dialog(object):
         self.groupBox.setTitle(_translate("Dialog", "Температура"))
         self.label_3.setText(_translate("Dialog", "Начальная"))
         self.label_4.setText(_translate("Dialog", "Среды"))
+        self.run.setText(_translate("Dialog", "&Run"))
+        self.tabs.setTabText(self.tabs.indexOf(self.tab), _translate("Dialog", "Data"))
+        self.tabs.setTabText(self.tabs.indexOf(self.tab_2), _translate("Dialog", "Result"))
 
 
 if __name__ == "__main__":

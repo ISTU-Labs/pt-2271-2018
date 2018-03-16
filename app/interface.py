@@ -1,6 +1,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from kettle_form import Ui_Dialog
 from models import Euler
+# import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('AGG')
+import matplotlib.pyplot as plt
 
 
 class KettleView(QtWidgets.QDialog):
@@ -54,6 +58,22 @@ class KettleController:
         for name in self.__class__.__fields__:
             widget = self.view.get_widget(name)
             widget.valueChanged[str].connect(self._on_value_changed)
+        view.ui.run.clicked.connect(self.on_run_clicked)
+
+    def on_run_clicked(self):
+        print("Run clicked")
+        view = self.view
+        ui = view.ui
+        result = ui.result
+        result.show()
+        size = result.size()
+        w = size.width()
+        h = size.height()
+
+        print(result, w, h)
+        res = self.model.calculate()
+        plt.plot(self.model.as_list())
+        plt.savefig("image.png")
 
     def _on_value_changed(self, value):
         sender = self.view.sender()

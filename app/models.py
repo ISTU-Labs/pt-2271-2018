@@ -44,3 +44,12 @@ class Euler(object):
     def __getitem__(self, index):
         assert self._result is not None, "run calculate method to get result"
         return euler.get_i(self._result, index)
+
+    def __len__(self):
+        return euler.get_len(self._rlen)
+
+    def as_list(self):
+        l = []
+        for i in range(len(self)):
+            l.append(self[i])
+        return l
