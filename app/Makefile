@@ -1,4 +1,4 @@
-.PHONY: run python qt
+.PHONY: run python qt clean
 
 run: euler
 	./euler
@@ -18,3 +18,6 @@ euler_wrap.c euler.py: euler.i
 
 kettle_form.py: ui/KettleForm.ui
 	pyuic5 -x -o $@ $<
+
+clean:
+	rm -f *.so *.o euler_wrap.c euler.py
