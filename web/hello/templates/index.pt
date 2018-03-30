@@ -69,26 +69,6 @@
 							<h1>Behind Every <span class="sp-1" tal:content="view.title">Success</span><br>
 							There is a <span class="sp-2">Cactus<span tal:content="view.now"></span></span></h1>
 							<a href="#" class="genric-btn primary circle arrow" tal:content="request.url">Get Started<span class="lnr lnr-arrow-right"></span></a>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>name</th>
-                                        <th>email</th>
-                                        <th>tel</th>
-                                        <th>date</th>
-                                        <th>comp
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr tal:repeat="row view.data">
-                                        <td tal:content="row">1</td>
-                                        <td tal:content="row">2</td>
-                                        <td tal:content="row">3</td>
-                                        <td tal:content="row">4</td>
-                                        <td tal:content="row">5</td>
-                                    </tr>
-                                </tbody>
-                            </table>
 						</div>
 					</div>
 				</div>
@@ -266,6 +246,32 @@
 							</p>
 						</div>
 					</div>
+                        <div>
+                            <table class="table table-striped">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">name</th>
+                                        <th scope="col">email</th>
+                                        <th scope="col">tel</th>
+                                        <th scope="col">date</th>
+                                        <th scope="col">comp
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr tal:repeat="row view.data">
+                                        <td >
+                                            <a tal:content="row[0]"
+                                               tal:attributes="href string:view?row=${row[5]}"
+                                            >1</a>
+                                        </td>
+                                        <td tal:content="row[1]">2</td>
+                                        <td tal:content="row[2]">3</td>
+                                        <td tal:content="row[3]">4</td>
+                                        <td tal:content="row[4]">5</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 				</div>
 			</div>
 		</section>
