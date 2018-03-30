@@ -26,7 +26,10 @@ class HelloView(object):
     now = property(get_now)
 
     def get_data(self):
-        csv_data = csv.reader(filename)
+        csv_data = csv.reader(open(filename),
+                              delimiter=";",
+                              quoting=csv.QUOTE_NONE
+                              )
         next(csv_data)
         return csv_data
 
