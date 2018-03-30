@@ -2,6 +2,7 @@ from wsgiref.simple_server import make_server
 from pyramid.config import Configurator
 from pyramid.response import Response
 from pkg_resources import resource_filename
+from collections import namedtuple
 
 # RESPONSE
 # ^
@@ -17,9 +18,15 @@ print("CSV filename: ", filename)
 
 
 class HelloView(object):
-    def __init__(self, request=None, title="Hi!", number=None):
+    def __init__(self,
+                 request=None,
+                 title="Hi!",
+                 number=None):
         self.title = title
-        self.number = int(number)  # FIXME: Check integer type
+        if number is not None:
+            self.number = int(number)  # FIXME: Check integer type
+        else:
+            self.number = number
         self.request = request
 
     def get_now(self):
@@ -33,14 +40,20 @@ class HelloView(object):
                               quoting=csv.QUOTE_NONE
                               )
 
-        next(csv_data)
+        fields = next(csv_data)
+        Emp = namedtuple('Emp', fields+['number'])
+
+        def _(x, number):
+            return Emp._make(x+[number])
+
+        number = self.number
 
         if number is None:
             def numbered_data(csv_data):
 
                 number = 1
                 for row in csv_data:
-                    yield row+[number]
+                    yield _(row, number)
                     number += 1
         else:
             num = number
@@ -50,7 +63,7 @@ class HelloView(object):
 
             def numbered_data(csv_data):
 
-                yield next(csv_data)+[number]
+                yield _(next(csv_data), number)
 
         return numbered_data(csv_data)
 
