@@ -30,3 +30,10 @@ class TestTests(object):
         # print(repr(names))
 
         assert names == testnames
+
+    def test_emp_by_nuber(self):
+        personname = "Griffith"
+
+        view = HelloView(number=5)
+
+        assert view.emp.name == personname

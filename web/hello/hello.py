@@ -77,6 +77,11 @@ class HelloView(object):
         answer.update(params)
         return answer
 
+    def get_emp(self):
+        return next(self.data)
+
+    emp = property(get_emp)
+
 
 def hello_world(request):
     view = HelloView(request=request,

@@ -251,7 +251,9 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">name</th>
-                                        <th scope="col">email</th>
+                                        <th scope="col"
+                                            style="width: 200px;"
+                                        >email</th>
                                         <th scope="col">tel</th>
                                         <th scope="col">date</th>
                                         <th scope="col">comp
@@ -260,14 +262,14 @@
                                 <tbody>
                                     <tr tal:repeat="row view.data">
                                         <td >
-                                            <a tal:content="row[0]"
-                                               tal:attributes="href string:view?row=${row[5]}"
+                                            <a tal:content="row.name"
+                                               tal:attributes="href string:view?row=${row.number}"
                                             >1</a>
                                         </td>
-                                        <td tal:content="row[1]">2</td>
-                                        <td tal:content="row[2]">3</td>
-                                        <td tal:content="row[3]">4</td>
-                                        <td tal:content="row[4]">5</td>
+                                        <td tal:content="row.email">2</td>
+                                        <td tal:content="row.tel">3</td>
+                                        <td tal:content="row.date">4</td>
+                                        <td tal:content="row.comp">5</td>
                                     </tr>
                                 </tbody>
                             </table>
