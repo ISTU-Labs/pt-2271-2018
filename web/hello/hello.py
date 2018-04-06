@@ -3,6 +3,7 @@ from pyramid.config import Configurator
 from pyramid.response import Response
 from pkg_resources import resource_filename
 from collections import namedtuple
+from database import init, User, Recipe, SESSION
 
 # RESPONSE
 # ^
@@ -14,19 +15,43 @@ import csv
 
 filename = resource_filename("hello", "data/data.csv")
 
+init()
+
+
 print("CSV filename: ", filename)
+csv_data = csv.reader(open(filename),
+                      delimiter=";",
+                      quoting=csv.QUOTE_NONE)
+fields = next(csv_data)
+# Emp = namedtuple('Emp', fields+['number'])
+
+
+def MakeUser(name, email, tel, date, comp):
+    return User(name=name,
+                email=email,
+                tel=tel,
+                # date=date,
+                comp=comp)
+
+
+for row in csv_data:
+    user = MakeUser(*row)
+    SESSION.add(user)
+
+SESSION.commit()
+print(SESSION)
 
 
 class HelloView(object):
     def __init__(self,
                  request=None,
                  title="Hi!",
-                 number=None):
+                 id=None):
         self.title = title
-        if number is not None:
-            self.number = int(number)  # FIXME: Check integer type
+        if id is not None:
+            self.id = int(id)  # FIXME: Check integer type
         else:
-            self.number = number
+            self.id = id
         self.request = request
 
     def get_now(self):
@@ -35,35 +60,20 @@ class HelloView(object):
     now = property(get_now)
 
     def get_data(self):
-        csv_data = csv.reader(open(filename),
-                              delimiter=";",
-                              quoting=csv.QUOTE_NONE
-                              )
+        print(SESSION)
 
-        fields = next(csv_data)
-        Emp = namedtuple('Emp', fields+['number'])
+        query = SESSION.query(User)
 
-        def _(x, number):
-            return Emp._make(x+[number])
+        id = self.id
 
-        number = self.number
+        if id is not None:
+            user = query.filter_by(id=id).first()
 
-        if number is None:
             def numbered_data(csv_data):
-
-                number = 1
-                for row in csv_data:
-                    yield _(row, number)
-                    number += 1
+                yield user
         else:
-            num = number
-            while num > 1:
-                next(csv_data)
-                num -= 1
-
             def numbered_data(csv_data):
-
-                yield _(next(csv_data), number)
+                yield from query
 
         return numbered_data(csv_data)
 
@@ -94,7 +104,7 @@ def hello_world(request):
 def view_row(request):
     view = HelloView(request=request,
                      title="Edit record",
-                     number=request.GET.get("row"))
+                     id=request.GET.get("id"))
     return view(subtitle="An extraordinary employee of our university")
 
 

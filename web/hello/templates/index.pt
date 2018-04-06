@@ -263,7 +263,7 @@
                                     <tr tal:repeat="row view.data">
                                         <td >
                                             <a tal:content="row.name"
-                                               tal:attributes="href string:view?row=${row.number}"
+                                               tal:attributes="href string:view?id=${row.id}"
                                             >1</a>
                                         </td>
                                         <td tal:content="row.email">2</td>
