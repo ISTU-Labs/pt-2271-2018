@@ -3,7 +3,11 @@ from pyramid.config import Configurator
 from pyramid.response import Response
 from pkg_resources import resource_filename
 from collections import namedtuple
-from database import init, User, Recipe, SESSION
+from sqlalchemy.orm import sessionmaker
+from database import init, User, Recipe, SESSIONMAKER, ENGINE, CREATE_ENG
+from pyramid.httpexceptions import HTTPFound
+from dateutil import parser
+from sqlalchemy.orm.attributes import set_attribute
 
 # RESPONSE
 # ^
@@ -11,35 +15,40 @@ from database import init, User, Recipe, SESSION
 # Model, (MVC, MVP).
 
 from datetime import datetime
-import csv
-
-filename = resource_filename("hello", "data/data.csv")
-
-init()
 
 
-print("CSV filename: ", filename)
-csv_data = csv.reader(open(filename),
-                      delimiter=";",
-                      quoting=csv.QUOTE_NONE)
-fields = next(csv_data)
-# Emp = namedtuple('Emp', fields+['number'])
+def ImportDB():
+    import csv
 
+    filename = resource_filename("hello", "data/data.csv")
 
-def MakeUser(name, email, tel, date, comp):
-    return User(name=name,
-                email=email,
-                tel=tel,
-                # date=date,
-                comp=comp)
+    init()
 
+    print("CSV filename: ", filename)
+    csv_data = csv.reader(open(filename),
+                          delimiter=";",
+                          quoting=csv.QUOTE_NONE)
+    fields = next(csv_data)
+    # Emp = namedtuple('Emp', fields+['number'])
 
-for row in csv_data:
-    user = MakeUser(*row)
-    SESSION.add(user)
+    session = SESSIONMAKER()
 
-SESSION.commit()
-print(SESSION)
+    def MakeUser(name, email, tel, date, comp):
+        return User(name=name,
+                    email=email,
+                    tel=tel,
+                    # date=parser.parse(date),
+                    comp=comp)
+
+    for row in csv_data:
+        user = MakeUser(*row)
+        session.add(user)
+
+    session.commit()
+    print(session)
+
+    print(session.query(User).first())
+    session.close()
 
 
 class HelloView(object):
@@ -60,22 +69,30 @@ class HelloView(object):
     now = property(get_now)
 
     def get_data(self):
-        print(SESSION)
+        session = self.request.db
 
-        query = SESSION.query(User)
+        query = session.query(User)
 
         id = self.id
 
+        rows = None
+
         if id is not None:
             user = query.filter_by(id=id).first()
+            print(user)
 
-            def numbered_data(csv_data):
+            def user_it():
                 yield user
-        else:
-            def numbered_data(csv_data):
-                yield from query
 
-        return numbered_data(csv_data)
+            rows = user_it()
+        else:
+            rows = query
+
+        for row in rows:
+            print(row)
+
+        session.close()
+        return rows
 
     data = property(get_data)
 
@@ -83,20 +100,25 @@ class HelloView(object):
         if self.request is None:
             raise RuntimeError("this method cannot be tested")
 
-        answer = {"view": self, "request": self.request}
+        answer = {"view": self,
+                  "request": self.request,
+                  #          "context": self.context
+                  }
         answer.update(params)
         return answer
 
     def get_emp(self):
-        return next(self.data)
+        session = self.request.db
+        user = session.query(User).filter_by(id=self.id).first()
+        return user
 
     emp = property(get_emp)
 
 
 def hello_world(request):
+
     view = HelloView(request=request,
                      title="Hi again!")
-    # print("I'm here!")
 
     return view(copy="Students of ISU, 2018")
 
@@ -105,11 +127,50 @@ def view_row(request):
     view = HelloView(request=request,
                      title="Edit record",
                      id=request.GET.get("id"))
-    return view(subtitle="An extraordinary employee of our university")
+    return view(subtitle="An extraordinary student of our university")
+
+
+def save_user(request):
+    id = request.POST.get("id")
+
+    session = request.db
+    user = session.query(User).filter_by(id=id).first()
+    for name in request.POST.keys():
+        if name == "date":
+            continue
+        if hasattr(user, name):
+            val = request.POST.get(name)
+            set_attribute(user, name, val)
+
+    user.date = parser.parse(request.POST.get("date"))
+    print(user)
+    session.add(user)
+    session.commit()
+
+    return HTTPFound(location=request.application_url+"/view?id="+id+"&msg=User+updated")
 
 
 def main(global_config, **settings):
+    def db(request):
+        maker = request.registry.dbmaker
+        session = maker()
+
+        def cleanup(request):
+            if request.exception is not None:
+                session.rollback()
+            else:
+                session.commit()
+            session.close()
+
+        request.add_finished_callback(cleanup)
+
+        return session
+
     with Configurator(settings=settings) as config:
+
+        engine = CREATE_ENG()  # engine_from_config(settings, prefix='sqlalchemy.')
+        config.registry.dbmaker = sessionmaker(bind=engine)
+        config.add_request_method(db, reify=True)
 
         config.add_route('hello', '/')
         config.add_view(hello_world, route_name='hello',
@@ -119,6 +180,9 @@ def main(global_config, **settings):
         config.add_view(view_row, route_name='view_emp',
                         renderer='hello:templates/view.pt')
 
+        config.add_route('save_user', '/save')
+        config.add_view(save_user, route_name='save_user')
+
         config.add_static_view(name='css', path='hello:templates/css')
         config.add_static_view(
             name='fonts', path='hello:templates/fonts')
@@ -126,6 +190,8 @@ def main(global_config, **settings):
         config.add_static_view(name='js', path='hello:templates/js')
         config.add_static_view(name='scss', path='hello:templates/scss')
         app = config.make_wsgi_app()
+
+    ImportDB()
 
     return app
 

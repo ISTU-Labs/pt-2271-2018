@@ -33,12 +33,15 @@
 		<link rel="stylesheet" href="css/bootstrap.css">
 		<link rel="stylesheet" href="css/main.css">
 	</head>
-	<body>
+<body>
+  <h1 tal:content="request.GET['msg'] | nothing">
+  </h1>
         <form tal:define="emp view.emp" action="save" method="POST">
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="name"
+                           name="name"
                            placeholder="Name of the person"
                            value=""
                            tal:attributes="value emp.name"
@@ -51,6 +54,7 @@
                     <input type="email" class="form-control" id="email-input"
                            placeholder="Person's email"
                            value=""
+                           name="email"
                            tal:attributes="value emp.email"
                     >
                 </div>
@@ -59,6 +63,7 @@
                     <input type="text"
                            class="form-control"
                            id="tel-input"
+                           name="tel"
                            placeholder="Phone number in form of +# (###) ### ## ##"
                            tal:attributes="value emp.tel"
                     >
@@ -71,6 +76,7 @@
                     <input type="text" class="form-control" id="date-input"
                            placeholder="A Date"
                            value=""
+                           name="date"
                            tal:attributes="value emp.date"
                     >
                 </div>
@@ -81,6 +87,7 @@
                            id="tel-input"
                            placeholder="The person's company"
                            value=""
+                           name="comp"
                            tal:attributes="value emp.comp"
                     >
 

@@ -101,3 +101,4 @@ ENV/
 .mypy_cache/
 app/image.png
 
+/web/data.fs

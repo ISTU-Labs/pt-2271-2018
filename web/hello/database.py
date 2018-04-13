@@ -12,11 +12,16 @@ Base = declarative_base()
 
 ECHO = False
 
-ENGINE = create_engine('sqlite:///:memory:',
-                       echo=ECHO)
+#ENGINE = create_engine('sqlite:///:memory:', echo=ECHO)
 
-Session = sessionmaker(bind=ENGINE)
-SESSION = Session()
+
+def CREATE_ENG():
+    return create_engine('sqlite:///data.fs', echo=ECHO)
+
+
+ENGINE = CREATE_ENG()
+
+SESSIONMAKER = sessionmaker(bind=ENGINE)
 
 
 class DBObject(object):
